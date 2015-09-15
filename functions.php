@@ -23,6 +23,7 @@ function nonBlockReadLine($line){
 */
 
 class CommandReader extends Thread{
+	public static $os;
 	private $readline;
 	/** @var \Threaded */
 	protected $buffer;
@@ -71,5 +72,42 @@ class CommandReader extends Thread{
 	}
 	public function getThreadName(){
 		return "Console";
+	}
+	public static function getOS($recalculate = false){
+		if(self::$os === null or $recalculate){
+			$uname = php_uname("s");
+			if(stripos($uname, "Darwin") !== false){
+				if(strpos(php_uname("m"), "iP") === 0){
+					self::$os = "ios";
+				}else{
+					self::$os = "mac";
+				}
+			}elseif(stripos($uname, "Win") !== false or $uname === "Msys"){
+				self::$os = "win";
+			}elseif(stripos($uname, "Linux") !== false){
+				if(@file_exists("/system/build.prop")){
+					self::$os = "android";
+				}else{
+					self::$os = "linux";
+				}
+			}elseif(stripos($uname, "BSD") !== false or $uname === "DragonFly"){
+				self::$os = "bsd";
+			}else{
+				self::$os = "other";
+			}
+		}
+		
+		return self::$os;
+	}
+}
+function kill($pid){
+	switch(CommandReader::getOS()){
+		case "win":
+			exec("taskkill.exe /F /PID " . ((int) $pid) . " > NUL");
+			break;
+		case "mac":
+		case "linux":
+		default:
+			exec("kill -9 " . ((int) $pid) . " > /dev/null 2>&1");
 	}
 }
