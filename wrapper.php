@@ -56,7 +56,21 @@ while($restarts--){
 				if(isset($pipes[2])){
 					fclose($pipes[2]);
 				}
-				proc_terminate($pipes[2]);
+				$pid = proc_get_status($server)["pid"];
+				proc_terminate($server);
+				switch(CommandReader::getOS()){
+					case "win":
+						$tasks = `umic process where (ParentProcessId=$pid) get ProcessId`;
+						foreach(explode(PHP_EOL, $tasks) as $child){
+							if(is_numeric($child)) kill($child);
+						}
+						break;
+					default:
+						exec("kill -9 -\$(ps -o pgid= $pid | grep -o '[0-9]*')");
+						break;
+				}
+				proc_close($server);
+				exit;
 			}
 			fwrite($pipes[0], $line . PHP_EOL);
 		}
