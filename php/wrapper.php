@@ -7,21 +7,24 @@ $targets = [
 	"src/pocketmine/PocketMine.php"
 ];
 
-$args = isset($argv) ? $argv :
-	console("[WARNING] Not passing any command line arguments to PocketMine server. Please enable 'register_argc_argv' in " .
-	php_ini_loaded_file() . " if you want this script to pass your arguments into PocketMine.", []);
-array_shift($args); // remove the leading __FILE__
-
 foreach($targets as $target){
 	if(is_file($target)){
 		$ok = true;
 		break;
 	}
 }
-if(!isset($ok)){
+if(!isset($ok, $target)){
 	console("[FATAL] No PocketMine installation (source folder or .phar) found in " . getcwd() . "!");
 	exit(2);
 }
+
+$args = isset($argv) ? $argv :
+	console("[WARNING] Not passing any command line arguments to PocketMine server. Please enable 'register_argc_argv' in " .
+	php_ini_loaded_file() . " if you want this script to pass your arguments into PocketMine.", []);
+if(is_file($args[0]) and realpath($args[0]) === realpath(__FILE__)){
+	array_shift($args);
+}
+array_unshift($args, $target);
 
 request_enter_num_times_restart:
 console("[?] Please enter the number of times to restart the server (including the first time starting).");
