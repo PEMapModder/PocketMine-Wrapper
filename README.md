@@ -26,3 +26,5 @@ bin\php\php.exe %USERPROFILE%\Downloads\wrapper.php
 * After that, the server will start and you can use the terminal like normal console.
 * To shutdown the server (like `/stop`) and then stop restarting, type `-die` then enter.
 * To forcefully shutdown the server, type `-kill` then enter.
+* To get the process ID of the wrapper (not the PocketMine server), type `-mypid` then enter.
+* To get the process ID of the PocketMine server (not the wrapper), type `-pmpid` then enter.

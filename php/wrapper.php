@@ -55,7 +55,12 @@ while($restarts--){
 			echo $line . PHP_EOL;
 		}
 		while(($line = nonBlockReadLine()) !== null){
-			if(strtolower($line) === "-die"){
+			if(strtolower($line) === "-mypid"){
+				console("Wrapper PID: " . getmypid());
+				continue;
+			}elseif(strtolower($line) === "-pmpid"){
+				console("PocketMine server PID: " . proc_get_status($server)["pid"]);
+			}elseif(strtolower($line) === "-die"){
 				$restarts = 0;
 				$line = "stop";
 			}elseif(strtolower($line) === "-kill"){
