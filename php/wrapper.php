@@ -1,6 +1,6 @@
 <?php
 
-if(!extension_loaded("pthreads") or !extension_loaded("pocketmine")){
+if(!extension_loaded("pthreads") or !extension_loaded("yaml")){
 	die("Please run this script using PocketMine PHP binaries.");
 }
 
