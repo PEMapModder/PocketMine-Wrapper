@@ -1,5 +1,9 @@
 <?php
 
+if(!extension_loaded("pthreads") or !extension_loaded("sockets") or !extension_loaded("uopz") or !extension_loaded("pocketmine")){
+	die("Please run this script using PocketMine PHP binaries.");
+}
+
 require_once "functions.php";
 
 $targets = [
